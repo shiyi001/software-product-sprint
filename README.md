@@ -1,6 +1,6 @@
 # Google Software Product Sprint
 
-This repo contains the projects you'll work on throughout SPS.
+This repo contains shiyi001's portfolio and SPS projects.
 
 To get started:
 
