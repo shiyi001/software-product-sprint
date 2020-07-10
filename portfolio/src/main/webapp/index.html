@@ -1,18 +1,56 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>My Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
-  </head>
-  <body>
-    <div id="content">
-      <h1>My Portfolio</h1>
-      <p>This is my portfolio.</p>
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
-      <div id="greeting-container"></div>
-    </div>
-  </body>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>Main</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- <link rel="stylesheet" href="/static/css/bootstrap.css"> -->
+        <link rel="stylesheet" href="./css/index.css">
+
+        <!-- fonts-->
+        <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital@1&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="header site-header"></div>
+        <div class="wrapper">
+            <!-- About me -->
+            <div class='page-title'>
+                <h1>About Me</h1>
+            </div>
+            <div class="page-content">
+                <p>Liangfeng Zheng is a master student at the Machine Intelligence lab of Peking University, Beijing China. He is majored in computer vision and deep learning. His research work mainly involves in Object Detection, Obejct Counting and Video Action Location.</p>
+                <p>He received his bachelor’s degree in software engineering from the School of Software in Beihang University, Beijing China.</p>
+            </div>
+            
+            <!-- Research Area -->
+            <div class='page-title'>
+                <h2>Research Area</h2>
+            </div>
+            <div class="page-content">
+                <ul>
+                    <li>Computer Vision</li>
+                    <li>Deep Learning</li>
+                    <li>Object Detection</li>
+                    <li>Object Counting</li>
+                    <li>Video Action Localization</li>
+                </ul>
+            </div>
+
+            <div class='page-title'>
+                <h2>Know Me More</h2>
+            </div>
+            <div class="page-content">
+                <p>I am very interested in cycling, and enjoy the feeling of a person or a group of people cycling on the street.</p>
+                <p>I also like to run, I can immerse myself in thinking while running.</p>
+            </div>
+        </div>
+        <div class="footer wrapper"></div>
+    </body>
+    <script type="text/javascript" src="./js/jquery-3.0.0.js"></script>
+    <script src="./js/addheader.js"></script>
 </html>
