@@ -14,7 +14,14 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.servlet.annotation.WebServlet;
@@ -25,16 +32,13 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  private ArrayList<String> comments;
-
   @Override
   public void init() {
-    comments = new ArrayList<>();
-    comments.add(
+    saveToDataStore(
         "A ship in port is safe, but that is not what ships are for. "
             + "Sail out to sea and do new things. - Grace Hopper");
-    comments.add("They told me computers could only do arithmetic. - Grace Hopper");
-    comments.add("A ship in port is safe, but that's not what ships are built for. - Grace Hopper");
+    saveToDataStore("They told me computers could only do arithmetic. - Grace Hopper");
+    saveToDataStore("A ship in port is safe, but that's not what ships are built for. - Grace Hopper");
   }
 
   @Override
@@ -46,7 +50,7 @@ public class DataServlet extends HttpServlet {
       response.getWriter().println("Please enter an meaningful comment");
       return;
     } else {
-      comments.add(new_comment);
+        saveToDataStore(new_comment);
     }
     
     // Redirect back to the HTML page.
@@ -55,10 +59,30 @@ public class DataServlet extends HttpServlet {
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+    
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+    
+    ArrayList<String> comments = new ArrayList<>();
+    for (Entity entity : results.asIterable()) {
+        comments.add((String)entity.getProperty("comment"));
+    }
+    
     Gson gson = new Gson();
     String json = gson.toJson(comments);
 
     response.setContentType("application/json;");
     response.getWriter().println(json);
+  }
+
+  private void saveToDataStore(String comment) {
+      long timestamp = System.currentTimeMillis();
+      Entity commentEntity = new Entity("Comment");
+      commentEntity.setProperty("comment", comment);
+      commentEntity.setProperty("timestamp", timestamp);
+
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(commentEntity);
   }
 }
