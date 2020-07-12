@@ -43,15 +43,15 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String new_comment = request.getParameter("new_comment");
+    String newComment = request.getParameter("new_comment");
 
-    if (new_comment == null || new_comment.length() == 0) {
+    if (newComment.isEmpty()) {
       response.setContentType("text/html");
       response.getWriter().println("Please enter an meaningful comment");
       return;
-    } else {
-        saveToDataStore(new_comment);
     }
+    
+    saveToDataStore(newComment);
     
     // Redirect back to the HTML page.
     response.sendRedirect("/index.html");
