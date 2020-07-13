@@ -24,56 +24,46 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/data")
-public class DataServlet extends HttpServlet {
+@WebServlet("/cat-data")
+public class CatDataServlet extends HttpServlet {
+  private Map<String, Integer> catVotes = new HashMap<>();
+  
+  @Override
+  public void init() {
+    catVotes.put("cat1", 512);
+    catVotes.put("cat2", 346);
+    catVotes.put("cat3", 412);
+    catVotes.put("cat4", 378);
+    catVotes.put("cat5", 667);
+    catVotes.put("cat6", 265);
+    catVotes.put("cat7", 176);
+    catVotes.put("cat8", 325);
+  }
+
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String newComment = request.getParameter("new_comment");
-
-    if (newComment == null || newComment.isEmpty()) {
-      response.setContentType("text/html");
-      response.getWriter().println("Please enter an meaningful comment");
-      return;
-    }
-    
-    saveToDataStore(newComment);
+    String cat = request.getParameter("cat");
+    int currentVotes = catVotes.containsKey(cat) ? catVotes.get(cat) : 0;
+    catVotes.put(cat, currentVotes + 1);
     
     // Redirect back to the HTML page.
-    response.sendRedirect("/index.html");
+    response.sendRedirect("/gallery.html");
   }
   
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
-    
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery results = datastore.prepare(query);
-    
-    ArrayList<String> comments = new ArrayList<>();
-    for (Entity entity : results.asIterable()) {
-        comments.add((String)entity.getProperty("comment"));
-    }
-    
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {    
     Gson gson = new Gson();
-    String json = gson.toJson(comments);
+    String json = gson.toJson(catVotes);
 
     response.setContentType("application/json;");
     response.getWriter().println(json);
-  }
-
-  private void saveToDataStore(String comment) {
-      long timestamp = System.currentTimeMillis();
-      Entity commentEntity = new Entity("Comment");
-      commentEntity.setProperty("comment", comment);
-      commentEntity.setProperty("timestamp", timestamp);
-
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      datastore.put(commentEntity);
   }
 }

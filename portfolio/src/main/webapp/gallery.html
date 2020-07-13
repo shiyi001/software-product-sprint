@@ -14,6 +14,12 @@
         <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital@1&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap" rel="stylesheet">
+
+        <!-- js -->
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript" src="./js/jquery-3.0.0.js"></script>
+        <script src="./js/addheader.js"></script>
+        <script src="./js/index.js"></script>
     </head>
 
     <body>
@@ -33,9 +39,34 @@
             <div class="page-content">
                 <p>Although I prefer dogs, the cats given by the material are also very cute. And I'm too lazy, so that I don't want to go to search for dog pictures again.</p>
             </div>
+        
+            <div class='page-title'>
+                <h2>Cat Ranking</h2>
+            </div>
+            <div class="page-content">
+                <div id="chart-container"></div>
+            </div>
+        
+            <div class='page-title'>
+                <h2>Do your Vote</h2>
+            </div>
+            <div class="page-content">
+                <form action="/cat-data" method="POST">
+                    <select name="cat">
+                    <option value="cat1">cat1</option>
+                    <option value="cat2">cat2</option>
+                    <option value="cat3">cat3</option>
+                    <option value="cat4">cat4</option>
+                    <option value="cat5">cat5</option>
+                    <option value="cat6">cat6</option>
+                    <option value="cat7">cat7</option>
+                    <option value="cat8">cat8</option>
+                    <option value="cat9">cat9</option>
+                    </select>
+                    <button>Submit</button>
+                </form>
+            </div>
         </div>
         <div class="footer wrapper"></div>
     </body>
-    <script type="text/javascript" src="./js/jquery-3.0.0.js"></script>
-    <script src="./js/addheader.js"></script>
 </html>
