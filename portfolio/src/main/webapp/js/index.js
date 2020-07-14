@@ -3,13 +3,13 @@ google.charts.setOnLoadCallback(drawChart);
 
 /** Creates a chart and adds it to the page. */
 function drawChart() {
-  fetch('./cat-data').then(response => response.json())
-  .then((catVotes) => {
+    fetch('./cat-data').then(response => response.json())
+    .then((catVotes) => {
     const data = new google.visualization.DataTable();
     data.addColumn('string', 'Cats');
     data.addColumn('number', 'Votes');
     Object.keys(catVotes).forEach((cat) => {
-      data.addRow([cat, catVotes[cat]]);
+        data.addRow([cat, catVotes[cat]]);
     });
 
     const options = {
@@ -21,7 +21,7 @@ function drawChart() {
     const chart = new google.visualization.ColumnChart(
         document.getElementById('chart-container'));
     chart.draw(data, options);
-  });
+    });
 }
 
 function sayHello() {
@@ -37,7 +37,7 @@ function sayHello() {
 
 /** Creates an <li> element containing text. */
 function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
+    const liElement = document.createElement('li');
+    liElement.innerText = text;
+    return liElement;
 }
