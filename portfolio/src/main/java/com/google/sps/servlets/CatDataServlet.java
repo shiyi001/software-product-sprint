@@ -50,8 +50,11 @@ public class CatDataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String cat = request.getParameter("cat");
-    int currentVotes = catVotes.containsKey(cat) ? catVotes.get(cat) : 0;
-    catVotes.put(cat, currentVotes + 1);
+    
+    if (!(cat == null || cat.isEmpty())) {
+        int currentVotes = catVotes.containsKey(cat) ? catVotes.get(cat) : 0;
+        catVotes.put(cat, currentVotes + 1);
+    }
     
     // Redirect back to the HTML page.
     response.sendRedirect("/gallery.html");
