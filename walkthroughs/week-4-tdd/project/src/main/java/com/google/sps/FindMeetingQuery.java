@@ -15,9 +15,73 @@
 package com.google.sps;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.lang.Math;
 
 public final class FindMeetingQuery {
-  public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    throw new UnsupportedOperationException("TODO: Implement this method.");
-  }
+    public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
+        if (request.getDuration() > TimeRange.WHOLE_DAY.duration()) {
+            return Arrays.asList();
+        }
+        
+        Collection<String> attendees = request.getAttendees();
+        if (attendees.isEmpty()) {
+            return Arrays.asList(TimeRange.WHOLE_DAY);
+        }
+
+        ArrayList<TimeRange> attendeeMeetingTimeRanges = 
+            getAttendeeMeetingTimeRanges(events, attendees);
+        Collections.sort(attendeeMeetingTimeRanges, TimeRange.ORDER_BY_START);
+
+        ArrayList<TimeRange> availableTimeRanges = new ArrayList<TimeRange>();
+        int start = TimeRange.START_OF_DAY;
+        int idx = 0;
+        while (idx < attendeeMeetingTimeRanges.size()) {
+            while ((idx < attendeeMeetingTimeRanges.size()) && 
+                (start >= attendeeMeetingTimeRanges.get(idx).start())) {
+                start = Math.max(start, attendeeMeetingTimeRanges.get(idx).end());
+                idx++;
+            }
+            if (idx >= attendeeMeetingTimeRanges.size()) break;
+
+            if (!attendeeMeetingTimeRanges.get(idx).contains(start)) {
+                int end = attendeeMeetingTimeRanges.get(idx).start();
+                if (end - start >= request.getDuration()) {
+                    availableTimeRanges.add(TimeRange.fromStartEnd(start, end, false));
+                }
+                start = attendeeMeetingTimeRanges.get(idx).end();
+            }
+            idx++;
+        }
+        if ((start < TimeRange.END_OF_DAY) && 
+            (TimeRange.END_OF_DAY - start >= request.getDuration())) {
+            availableTimeRanges.add(TimeRange.fromStartEnd(start, TimeRange.END_OF_DAY, true));
+        }
+
+        return availableTimeRanges;
+    }
+
+    private ArrayList<TimeRange> getAttendeeMeetingTimeRanges(
+        Collection<Event> events, Collection<String> attendees
+    ) {
+        ArrayList<TimeRange> attendeeMeetingTimeRanges = 
+            new ArrayList<TimeRange>();
+        HashSet<TimeRange> hasAdded = new HashSet<TimeRange>();
+        
+        for (String attendee : attendees) {
+            for (Event e : events) {
+                if (hasAdded.contains(e)) continue;
+                if (e.getAttendees().contains(attendee)) {
+                    TimeRange when = e.getWhen();
+                    attendeeMeetingTimeRanges.add(when);
+                    hasAdded.add(when);
+                }
+            }
+        }
+
+        return attendeeMeetingTimeRanges;
+    }
 }
