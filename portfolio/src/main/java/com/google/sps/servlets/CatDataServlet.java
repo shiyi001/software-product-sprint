@@ -51,7 +51,7 @@ public class CatDataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String cat = request.getParameter("cat");
     
-    if (!(cat == null || cat.isEmpty())) {
+    if (cat != null && !cat.isEmpty())) {
         int currentVotes = catVotes.containsKey(cat) ? catVotes.get(cat) : 0;
         catVotes.put(cat, currentVotes + 1);
     }
