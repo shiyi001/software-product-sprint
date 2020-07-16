@@ -33,15 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   @Override
-  public void init() {
-    saveToDataStore(
-        "A ship in port is safe, but that is not what ships are for. "
-            + "Sail out to sea and do new things. - Grace Hopper");
-    saveToDataStore("They told me computers could only do arithmetic. - Grace Hopper");
-    saveToDataStore("A ship in port is safe, but that's not what ships are built for. - Grace Hopper");
-  }
-
-  @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String newComment = request.getParameter("new_comment");
 
