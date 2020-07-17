@@ -1,4 +1,4 @@
-google.charts.load('current', { 'packages': ['corechart'] });
+google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
 
 /** Creates a chart and adds it to the page. */
