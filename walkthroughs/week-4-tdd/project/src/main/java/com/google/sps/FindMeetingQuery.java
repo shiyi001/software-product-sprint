@@ -24,7 +24,7 @@ import java.lang.Math;
 public final class FindMeetingQuery {
     
     /**
-     * Return available time period for a meeting request
+     * Returns available time period for a meeting request
      *
      * @param events All scheduled meetings. Can be null.
      * @param request A new meeting request, including duration and attendees. 
