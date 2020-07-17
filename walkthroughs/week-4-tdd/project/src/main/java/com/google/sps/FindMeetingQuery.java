@@ -22,7 +22,16 @@ import java.util.HashSet;
 import java.lang.Math;
 
 public final class FindMeetingQuery {
-    public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
+    
+    /**
+     * Return available time period for a meeting request
+     *
+     * @param events All scheduled meetings. Can be null.
+     * @param request A new meeting request, including duration and attendees. 
+     *                Must be non-null.
+     */
+    public Collection<TimeRange> query(Collection<Event> events, 
+                                       MeetingRequest request) {
         if (request.getDuration() > TimeRange.WHOLE_DAY.duration()) {
             return Arrays.asList();
         }
@@ -42,46 +51,45 @@ public final class FindMeetingQuery {
         while (idx < attendeeMeetingTimeRanges.size()) {
             while ((idx < attendeeMeetingTimeRanges.size()) && 
                 (start >= attendeeMeetingTimeRanges.get(idx).start())) {
-                start = Math.max(start, attendeeMeetingTimeRanges.get(idx).end());
+                start = Math.max(start, 
+                    attendeeMeetingTimeRanges.get(idx).end());
                 idx++;
             }
             if (idx >= attendeeMeetingTimeRanges.size()) break;
 
-            if (!attendeeMeetingTimeRanges.get(idx).contains(start)) {
-                int end = attendeeMeetingTimeRanges.get(idx).start();
-                if (end - start >= request.getDuration()) {
-                    availableTimeRanges.add(TimeRange.fromStartEnd(start, end, false));
-                }
-                start = attendeeMeetingTimeRanges.get(idx).end();
+            int end = attendeeMeetingTimeRanges.get(idx).start();
+            if (end - start >= request.getDuration()) {
+                availableTimeRanges.add(
+                    TimeRange.fromStartEnd(start, end, false));
             }
+            start = attendeeMeetingTimeRanges.get(idx).end();
+
             idx++;
         }
         if ((start < TimeRange.END_OF_DAY) && 
             (TimeRange.END_OF_DAY - start >= request.getDuration())) {
-            availableTimeRanges.add(TimeRange.fromStartEnd(start, TimeRange.END_OF_DAY, true));
+            availableTimeRanges.add(
+                TimeRange.fromStartEnd(start, TimeRange.END_OF_DAY, true));
         }
 
         return availableTimeRanges;
     }
 
     private ArrayList<TimeRange> getAttendeeMeetingTimeRanges(
-        Collection<Event> events, Collection<String> attendees
-    ) {
+        Collection<Event> events, 
+        Collection<String> attendees) {
         ArrayList<TimeRange> attendeeMeetingTimeRanges = 
             new ArrayList<TimeRange>();
-        HashSet<TimeRange> hasAdded = new HashSet<TimeRange>();
-        
-        for (String attendee : attendees) {
-            for (Event e : events) {
-                if (hasAdded.contains(e)) continue;
+
+        for (Event e : events) {
+            for (String attendee: attendees) {
                 if (e.getAttendees().contains(attendee)) {
-                    TimeRange when = e.getWhen();
-                    attendeeMeetingTimeRanges.add(when);
-                    hasAdded.add(when);
+                    attendeeMeetingTimeRanges.add(e.getWhen());
+                    break;
                 }
             }
         }
-
+        
         return attendeeMeetingTimeRanges;
     }
 }
